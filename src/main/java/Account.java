@@ -11,10 +11,7 @@ public class Account {
         return balance;
     }
 
-    public void deposit(int amount) throws InvalidParameterException {
-        if (amount <= 0) {
-            throw new InvalidParameterException("Can not deposit less than 1");
-        }
+    public void deposit(int amount) {
         this.balance += amount;
     }
 }
