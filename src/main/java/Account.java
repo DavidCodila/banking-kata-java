@@ -17,4 +17,14 @@ public class Account {
         }
         this.balance += amount;
     }
+
+    public void withdraw(int amount) throws RuntimeException {
+        if (amount <= 0) {
+            throw new InvalidParameterException("Can not withdraw less than 1");
+        }
+        if (balance - amount < 0) {
+            throw new RuntimeException("Invalid funds to make transaction");
+        }
+        this.balance -= amount;
+    }
 }
