@@ -1,3 +1,5 @@
+import java.security.InvalidParameterException;
+
 public class Account {
     private int balance;
 
@@ -9,7 +11,10 @@ public class Account {
         return balance;
     }
 
-    public void deposit(int amount) {
+    public void deposit(int amount) throws InvalidParameterException {
+        if (amount <= 0) {
+            throw new InvalidParameterException("Can not deposit less than 1");
+        }
         this.balance += amount;
     }
 }
