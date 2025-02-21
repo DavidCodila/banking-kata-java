@@ -32,4 +32,8 @@ public class Account {
         this.balance -= amount;
     }
 
+    public String printStatement() {
+        return "";
+    }
+
 }

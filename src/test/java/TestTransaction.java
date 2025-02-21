@@ -10,4 +10,5 @@ public class TestTransaction {
         Transaction transaction = new Transaction("+2", 1, date);
         assertEquals(date + "\t+2\t1", transaction.getInformation());
     }
+    
 }

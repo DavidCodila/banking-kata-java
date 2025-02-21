@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TestAccount {
+    private static String date = "1.1.2025";
     private Account account;
 
     @BeforeEach
@@ -28,24 +29,6 @@ public class TestAccount {
     }
 
     @Test
-    public void testAccountDeposit_0() {
-        var exception = assertThrows(
-                InvalidParameterException.class,
-                () -> account.deposit(0)
-        );
-        assertEquals(exception.getMessage(), "Can not deposit less than 1");
-    }
-
-    @Test
-    public void testAccountDeposit_negative1() {
-        var exception = assertThrows(
-                InvalidParameterException.class,
-                () -> account.deposit(-1)
-        );
-        assertEquals(exception.getMessage(), "Can not deposit less than 1");
-    }
-
-    @Test
     public void testAccountWithdraw_1() {
         account.deposit(2);
         account.withdraw(1);
@@ -58,6 +41,15 @@ public class TestAccount {
         account.withdraw(100);
         account.withdraw(200);
         assertEquals(100, account.getBalance());
+    }
+
+    @Test
+    public void testAccountPrintStatement_Deposit1() {
+        account.deposit(1);
+        assertEquals(
+                "Date\tAmount\tBalance\n" + date + "\t+1\t1",
+                account.printStatement()
+        );
     }
 
     @Test
@@ -86,5 +78,23 @@ public class TestAccount {
                 () -> account.withdraw(2)
         );
         assertEquals(exception.getMessage(), "Invalid funds to make transaction");
+    }
+
+    @Test
+    public void testAccountDeposit_0() {
+        var exception = assertThrows(
+                InvalidParameterException.class,
+                () -> account.deposit(0)
+        );
+        assertEquals(exception.getMessage(), "Can not deposit less than 1");
+    }
+
+    @Test
+    public void testAccountDeposit_negative1() {
+        var exception = assertThrows(
+                InvalidParameterException.class,
+                () -> account.deposit(-1)
+        );
+        assertEquals(exception.getMessage(), "Can not deposit less than 1");
     }
 }
