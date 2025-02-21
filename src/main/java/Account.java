@@ -1,10 +1,14 @@
 import java.security.InvalidParameterException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Account {
     private int balance;
+    private List<Transaction> transactions;
 
     public Account() {
         this.balance = 0;
+        this.transactions = new ArrayList<>();
     }
 
     public int getBalance() {
@@ -27,4 +31,5 @@ public class Account {
         }
         this.balance -= amount;
     }
+
 }
