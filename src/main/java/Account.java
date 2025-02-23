@@ -4,21 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Account {
-    private int balance;
-    private final List<Transaction> transactions;
-    private final LocalDate date;
-
-    public Account(LocalDate date) {
-        this.date = date;
-        this.balance = 0;
-        this.transactions = new ArrayList<>();
-    }
+    private int balance = 0;
+    private final List<Transaction> transactions = new ArrayList<>();
 
     public int getBalance() {
         return balance;
     }
 
-    public void deposit(int amount) throws InvalidParameterException {
+    public void deposit(int amount, LocalDate date) throws InvalidParameterException {
         if (amount <= 0) {
             throw new InvalidParameterException("Can not deposit less than 1");
         }
@@ -26,7 +19,7 @@ public class Account {
         transactions.add(new Transaction(amount, balance, Constants.depositType, date));
     }
 
-    public void withdraw(int amount) throws RuntimeException {
+    public void withdraw(int amount, LocalDate date) throws RuntimeException {
         if (amount <= 0) {
             throw new InvalidParameterException("Can not withdraw less than 1");
         }
@@ -38,11 +31,15 @@ public class Account {
     }
 
     public String printStatement() {
+        return Constants.statementHeader + getTransactions();
+    }
+
+    private String getTransactions() {
         StringBuilder transactionsString = new StringBuilder();
         for (Transaction transaction : transactions) {
             transactionsString.append(transaction.getInformation()).append("\n");
         }
-        return Constants.statementHeader + transactionsString.toString().stripTrailing();
+        return transactionsString.toString().stripTrailing();
     }
 
 }

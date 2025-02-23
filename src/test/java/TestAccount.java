@@ -13,40 +13,40 @@ public class TestAccount {
 
     @BeforeEach
     public void setup() {
-        account = new Account(date);
+        account = new Account();
     }
 
     @Test
     public void testAccountDeposit_1() {
-        account.deposit(1);
+        account.deposit(1, date);
         assertEquals(1, account.getBalance());
     }
 
     @Test
     public void testAccountDeposit_100_200() {
-        account.deposit(100);
-        account.deposit(200);
+        account.deposit(100, date);
+        account.deposit(200, date);
         assertEquals(300, account.getBalance());
     }
 
     @Test
     public void testAccountWithdraw_1() {
-        account.deposit(2);
-        account.withdraw(1);
+        account.deposit(2, date);
+        account.withdraw(1, date);
         assertEquals(1, account.getBalance());
     }
 
     @Test
     public void testAccountWithdraw_100_200() {
-        account.deposit(400);
-        account.withdraw(100);
-        account.withdraw(200);
+        account.deposit(400, date);
+        account.withdraw(100, date);
+        account.withdraw(200, date);
         assertEquals(100, account.getBalance());
     }
 
     @Test
     public void testAccountPrintStatement_Deposit1() {
-        account.deposit(1);
+        account.deposit(1, date);
         assertEquals(
                 Constants.statementHeader + date + "\t+1\t1",
                 account.printStatement()
@@ -57,7 +57,7 @@ public class TestAccount {
     public void testAccountWithdraw_0() {
         var exception = assertThrows(
                 InvalidParameterException.class,
-                () -> account.withdraw(0)
+                () -> account.withdraw(0, date)
         );
         assertEquals(exception.getMessage(), "Can not withdraw less than 1");
     }
@@ -66,17 +66,17 @@ public class TestAccount {
     public void testAccountWithdraw_negative1() {
         var exception = assertThrows(
                 InvalidParameterException.class,
-                () -> account.withdraw(-1)
+                () -> account.withdraw(-1, date)
         );
         assertEquals(exception.getMessage(), "Can not withdraw less than 1");
     }
 
     @Test
     public void testAccountWithdraw_InvalidFunds() {
-        account.deposit(1);
+        account.deposit(1, date);
         var exception = assertThrows(
                 RuntimeException.class,
-                () -> account.withdraw(2)
+                () -> account.withdraw(2, date)
         );
         assertEquals(exception.getMessage(), "Invalid funds to make transaction");
     }
@@ -85,7 +85,7 @@ public class TestAccount {
     public void testAccountDeposit_0() {
         var exception = assertThrows(
                 InvalidParameterException.class,
-                () -> account.deposit(0)
+                () -> account.deposit(0, date)
         );
         assertEquals(exception.getMessage(), "Can not deposit less than 1");
     }
@@ -94,7 +94,7 @@ public class TestAccount {
     public void testAccountDeposit_negative1() {
         var exception = assertThrows(
                 InvalidParameterException.class,
-                () -> account.deposit(-1)
+                () -> account.deposit(-1, date)
         );
         assertEquals(exception.getMessage(), "Can not deposit less than 1");
     }
