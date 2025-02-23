@@ -7,10 +7,10 @@ public class Transaction {
     private final LocalDate date;
 
     public Transaction(int amount, int balance, String type, LocalDate date) {
-        this.date = date;
         this.amount = amount;
         this.balance = balance;
         this.type = type;
+        this.date = date;
     }
 
     public String getInformation() {
