@@ -2,17 +2,18 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.security.InvalidParameterException;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class TestAccount {
-    private static String date = "1.1.2025";
+    private static final LocalDate date = LocalDate.now();
     private Account account;
 
     @BeforeEach
     public void setup() {
-        account = new Account();
+        account = new Account(date);
     }
 
     @Test
@@ -47,7 +48,7 @@ public class TestAccount {
     public void testAccountPrintStatement_Deposit1() {
         account.deposit(1);
         assertEquals(
-                "Date\tAmount\tBalance\n" + date + "\t+1\t1",
+                Constants.statementHeader + date + "\t+1\t1",
                 account.printStatement()
         );
     }

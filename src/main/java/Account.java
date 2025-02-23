@@ -1,12 +1,15 @@
 import java.security.InvalidParameterException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Account {
     private int balance;
-    private List<Transaction> transactions;
+    private final List<Transaction> transactions;
+    private final LocalDate date;
 
-    public Account() {
+    public Account(LocalDate date) {
+        this.date = date;
         this.balance = 0;
         this.transactions = new ArrayList<>();
     }
@@ -20,6 +23,7 @@ public class Account {
             throw new InvalidParameterException("Can not deposit less than 1");
         }
         this.balance += amount;
+        transactions.add(new Transaction(amount, balance, Constants.depositType, date));
     }
 
     public void withdraw(int amount) throws RuntimeException {
@@ -30,10 +34,15 @@ public class Account {
             throw new RuntimeException("Invalid funds to make transaction");
         }
         this.balance -= amount;
+        transactions.add(new Transaction(amount, balance, Constants.withdrawalType, date));
     }
 
     public String printStatement() {
-        return "";
+        StringBuilder transactionsString = new StringBuilder();
+        for (Transaction transaction : transactions) {
+            transactionsString.append(transaction.getInformation()).append("\n");
+        }
+        return Constants.statementHeader + transactionsString.toString().stripTrailing();
     }
 
 }
