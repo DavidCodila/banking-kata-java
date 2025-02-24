@@ -16,7 +16,7 @@ public class Account {
             throw new InvalidParameterException("Can not deposit less than 1");
         }
         this.balance += amount;
-        transactions.add(new Transaction(amount, balance, Constants.depositType, date));
+        transactions.add(new Transaction(amount, balance, TransactionType.DEPOSIT.symbol, date));
     }
 
     public void withdraw(int amount, LocalDate date) throws RuntimeException {
@@ -27,7 +27,7 @@ public class Account {
             throw new RuntimeException("Invalid funds to make transaction");
         }
         this.balance -= amount;
-        transactions.add(new Transaction(amount, balance, Constants.withdrawalType, date));
+        transactions.add(new Transaction(amount, balance, TransactionType.WITHDRAWAL.symbol, date));
     }
 
     public String printStatement() {
