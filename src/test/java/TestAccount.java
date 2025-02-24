@@ -58,6 +58,19 @@ public class TestAccount {
     }
 
     @Test
+    public void testGetTransactionsByAmount() {
+        int amount = 3;
+        account.deposit(10, date);
+        account.deposit(amount, date);
+        account.withdraw(1, date);
+        account.withdraw(amount, date);
+        account.withdraw(1, date);
+        String expectedOutput =
+                date + "\t+3\t13" + "\n" + date + "\t-3\t9";
+        assertEquals(expectedOutput, account.getTransactionsByAmount(amount));
+    }
+
+    @Test
     public void testWithdraw_0() {
         var exception = assertThrows(
                 InvalidParameterException.class,
