@@ -37,4 +37,20 @@ public class TestTransactionFilter {
                 + date + "\t-100\t500";
         assertEquals(expectedOutput, TransactionFilter.getTransactionsByAmount(transactions,100));
     }
+
+    @Test
+    public void testGetTransactionsByTypeDeposit() {
+        String expectedOutput =
+                  date + "\t+100\t100" + "\n"
+                + date + "\t+500\t600";
+        assertEquals(expectedOutput, TransactionFilter.getTransactionsByType(transactions,TransactionType.DEPOSIT));
+    }
+
+    @Test
+    public void testGetTransactionsByTypeWithdrawal() {
+        String expectedOutput =
+                  date + "\t-100\t500" + "\n"
+                + date + "\t-200\t300";
+        assertEquals(expectedOutput, TransactionFilter.getTransactionsByType(transactions,TransactionType.WITHDRAWAL));
+    }
 }
