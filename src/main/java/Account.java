@@ -24,31 +24,11 @@ public class Account {
     }
 
     public String printStatement() {
-        return Constants.statementHeader + getTransactions();
-    }
-
-    private String getTransactions() {
-        StringBuilder transactionsString = new StringBuilder();
-        for (Transaction transaction : transactions) {
-            transactionsString.append(formatTransaction(transaction)).append("\n");
-        }
-        return transactionsString.toString().stripTrailing();
-    }
-
-    private String formatTransaction(Transaction transaction) {
-        return transaction.date()
-                + "\t" + transaction.symbol() + transaction.amount()
-                + "\t" + transaction.balance();
+        return Constants.statementHeader + TransactionFilter.getAllTransactions(transactions);
     }
 
     public String getTransactionsByAmount(int amount) {
-        StringBuilder transactionsString = new StringBuilder();
-        for (Transaction transaction: transactions) {
-            if (transaction.amount() == amount) {
-                transactionsString.append(formatTransaction(transaction)).append("\n");
-            }
-        }
-        return transactionsString.toString().stripTrailing();
+        return Constants.statementHeader + TransactionFilter.getTransactionsByAmount(transactions, amount);
     }
 
     private static void validateDeposit(int amount) {

@@ -65,7 +65,7 @@ public class TestAccount {
         account.withdraw(1, date);
         account.withdraw(amount, date);
         account.withdraw(1, date);
-        String expectedOutput =
+        String expectedOutput = Constants.statementHeader +
                 date + "\t+3\t13" + "\n" + date + "\t-3\t9";
         assertEquals(expectedOutput, account.getTransactionsByAmount(amount));
     }
