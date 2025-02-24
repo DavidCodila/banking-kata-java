@@ -1,42 +1,42 @@
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class TransactionFilter {
 
     public static String getAllTransactions(List<Transaction> transactions) {
-        StringBuilder transactionsString = new StringBuilder();
-        for (Transaction transaction : transactions) {
-            transactionsString.append(formatTransaction(transaction)).append("\n");
-        }
-        return transactionsString.toString().stripTrailing();
+        return formatTransactions(transactions);
     }
 
     public static String getTransactionsByAmount(List<Transaction> transactions, int amount) {
-        StringBuilder transactionsString = new StringBuilder();
-        for (Transaction transaction: transactions) {
-            if (transaction.amount() == amount) {
-                transactionsString.append(formatTransaction(transaction)).append("\n");
-            }
-        }
-        return transactionsString.toString().stripTrailing();
+        Predicate<Transaction> streamPredicate = item -> item.amount() == amount;
+        return formatTransactions(transactions.stream().filter(streamPredicate).collect(Collectors.toList()));
     }
 
     public static String getTransactionsByType(List<Transaction> transactions, TransactionType type) {
-        StringBuilder transactionsString = new StringBuilder();
-        for (Transaction transaction: transactions) {
-            if (type == TransactionType.WITHDRAWAL && Objects.equals(transaction.symbol(), "-")) {
-                transactionsString.append(formatTransaction(transaction)).append("\n");
-            }
-            else if (type == TransactionType.DEPOSIT && Objects.equals(transaction.symbol(), "+")) {
-                transactionsString.append(formatTransaction(transaction)).append("\n");
-            }
+        Predicate<Transaction> streamPredicate;
+        if (type == TransactionType.DEPOSIT) {
+            streamPredicate = item -> Objects.equals(item.symbol(), TransactionType.DEPOSIT.symbol);
         }
-        return transactionsString.toString().stripTrailing();
+        else if (type == TransactionType.WITHDRAWAL) {
+            streamPredicate = item -> Objects.equals(item.symbol(), TransactionType.WITHDRAWAL.symbol);
+        }
+        else {
+            return "";
+        }
+        return formatTransactions(transactions.stream().filter(streamPredicate).collect(Collectors.toList()));
     }
 
+    private static String formatTransactions(List<Transaction> transactions) {
+        return transactions.stream()
+                .map(TransactionFilter::formatTransaction)
+                .collect(Collectors.joining())
+                .stripTrailing();
+    }
     private static String formatTransaction(Transaction transaction) {
         return transaction.date()
                 + "\t" + transaction.symbol() + transaction.amount()
-                + "\t" + transaction.balance();
+                + "\t" + transaction.balance() + "\n";
     }
 }
