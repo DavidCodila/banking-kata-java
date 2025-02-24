@@ -30,7 +30,23 @@ public class Account {
     private String getTransactions() {
         StringBuilder transactionsString = new StringBuilder();
         for (Transaction transaction : transactions) {
-            transactionsString.append(transaction.getInformation()).append("\n");
+            transactionsString.append(formatTransaction(transaction)).append("\n");
+        }
+        return transactionsString.toString().stripTrailing();
+    }
+
+    private String formatTransaction(Transaction transaction) {
+        return transaction.date()
+                + "\t" + transaction.symbol() + transaction.amount()
+                + "\t" + transaction.balance();
+    }
+
+    public String getTransactionsByAmount(int amount) {
+        StringBuilder transactionsString = new StringBuilder();
+        for (Transaction transaction: transactions) {
+            if (transaction.amount() == amount) {
+                transactionsString.append(formatTransaction(transaction)).append("\n");
+            }
         }
         return transactionsString.toString().stripTrailing();
     }

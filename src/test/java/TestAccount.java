@@ -17,27 +17,27 @@ public class TestAccount {
     }
 
     @Test
-    public void testAccountDeposit_1() {
+    public void testDeposit_1() {
         account.deposit(1, date);
         assertEquals(1, account.getBalance());
     }
 
     @Test
-    public void testAccountDeposit_100_200() {
+    public void testDeposit_100_200() {
         account.deposit(100, date);
         account.deposit(200, date);
         assertEquals(300, account.getBalance());
     }
 
     @Test
-    public void testAccountWithdraw_1() {
+    public void testWithdraw_1() {
         account.deposit(2, date);
         account.withdraw(1, date);
         assertEquals(1, account.getBalance());
     }
 
     @Test
-    public void testAccountWithdraw_100_200() {
+    public void testWithdraw_100_200() {
         account.deposit(400, date);
         account.withdraw(100, date);
         account.withdraw(200, date);
@@ -45,16 +45,20 @@ public class TestAccount {
     }
 
     @Test
-    public void testAccountPrintStatement_Deposit1() {
+    public void testPrintStatement() {
         account.deposit(1, date);
-        assertEquals(
-                Constants.statementHeader + date + "\t+1\t1",
-                account.printStatement()
-        );
+        account.deposit(2, date);
+        account.withdraw(3, date);
+        String expectedOutput
+                = Constants.statementHeader
+                + date + "\t+1\t1" + "\n"
+                + date + "\t+2\t3" + "\n"
+                + date + "\t-3\t0";
+        assertEquals(expectedOutput, account.printStatement());
     }
 
     @Test
-    public void testAccountWithdraw_0() {
+    public void testWithdraw_0() {
         var exception = assertThrows(
                 InvalidParameterException.class,
                 () -> account.withdraw(0, date)
@@ -63,7 +67,7 @@ public class TestAccount {
     }
 
     @Test
-    public void testAccountWithdraw_negative1() {
+    public void testWithdraw_negative1() {
         var exception = assertThrows(
                 InvalidParameterException.class,
                 () -> account.withdraw(-1, date)
@@ -72,7 +76,7 @@ public class TestAccount {
     }
 
     @Test
-    public void testAccountWithdraw_InvalidFunds() {
+    public void testWithdraw_InvalidFunds() {
         account.deposit(1, date);
         var exception = assertThrows(
                 RuntimeException.class,
@@ -82,7 +86,7 @@ public class TestAccount {
     }
 
     @Test
-    public void testAccountDeposit_0() {
+    public void testDeposit_0() {
         var exception = assertThrows(
                 InvalidParameterException.class,
                 () -> account.deposit(0, date)
@@ -91,7 +95,7 @@ public class TestAccount {
     }
 
     @Test
-    public void testAccountDeposit_negative1() {
+    public void testDeposit_negative1() {
         var exception = assertThrows(
                 InvalidParameterException.class,
                 () -> account.deposit(-1, date)
