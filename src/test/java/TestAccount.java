@@ -71,6 +71,19 @@ public class TestAccount {
     }
 
     @Test
+    public void testGetTransactionsByDate() {
+        LocalDate datePlus100Days = date.plusDays(100);
+        account.deposit(10, date);
+        account.deposit(200, datePlus100Days);
+        account.withdraw(1, date);
+        account.withdraw(100, date);
+        account.withdraw(2, datePlus100Days);
+        String expectedOutput = Constants.statementHeader +
+                datePlus100Days + "\t+200\t210" + "\n" + datePlus100Days + "\t-2\t107";
+        assertEquals(expectedOutput, account.getTransactionsByDate(datePlus100Days));
+    }
+
+    @Test
     public void testWithdraw_0() {
         var exception = assertThrows(
                 InvalidParameterException.class,

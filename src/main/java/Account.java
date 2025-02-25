@@ -12,13 +12,13 @@ public class Account {
     }
 
     public void deposit(int amount, LocalDate date) throws InvalidParameterException {
-        validateDeposit(amount);
+        ValidateTransaction.validateDeposit(amount);
         this.balance += amount;
         transactions.add(new Transaction(amount, balance, TransactionType.DEPOSIT.symbol, date));
     }
 
     public void withdraw(int amount, LocalDate date) throws RuntimeException {
-        validateWithdrawal(amount);
+        ValidateTransaction.validateWithdrawal(amount, balance);
         this.balance -= amount;
         transactions.add(new Transaction(amount, balance, TransactionType.WITHDRAWAL.symbol, date));
     }
@@ -31,19 +31,8 @@ public class Account {
         return Constants.statementHeader + TransactionFilter.getTransactionsByAmount(transactions, amount);
     }
 
-    private static void validateDeposit(int amount) {
-        if (amount <= 0) {
-            throw new InvalidParameterException("Can not deposit less than 1");
-        }
-    }
-
-    private void validateWithdrawal(int amount) {
-        if (amount <= 0) {
-            throw new InvalidParameterException("Can not withdraw less than 1");
-        }
-        if (balance - amount < 0) {
-            throw new RuntimeException("Invalid funds to make transaction");
-        }
+    public String getTransactionsByDate(LocalDate date) {
+        return Constants.statementHeader + TransactionFilter.getTransactionsDate(transactions, date);
     }
 
 }
