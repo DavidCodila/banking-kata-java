@@ -6,12 +6,13 @@ import java.util.stream.Collectors;
 public class TransactionFilter {
 
     public static String getAllTransactions(List<Transaction> transactions) {
-        return formatTransactions(transactions);
+        Predicate<Transaction> streamPredicate = transaction -> true;
+        return filteredTransactions(transactions, streamPredicate);
     }
 
     public static String getTransactionsByAmount(List<Transaction> transactions, int amount) {
         Predicate<Transaction> streamPredicate = item -> item.amount() == amount;
-        return formatTransactions(transactions.stream().filter(streamPredicate).collect(Collectors.toList()));
+        return filteredTransactions(transactions, streamPredicate);
     }
 
     public static String getTransactionsByType(List<Transaction> transactions, TransactionType type) {
@@ -25,15 +26,17 @@ public class TransactionFilter {
         else {
             return "";
         }
-        return formatTransactions(transactions.stream().filter(streamPredicate).collect(Collectors.toList()));
+        return filteredTransactions(transactions, streamPredicate);
     }
 
-    private static String formatTransactions(List<Transaction> transactions) {
+    private static String filteredTransactions(List<Transaction> transactions, Predicate<Transaction> streamPredicate) {
         return transactions.stream()
+                .filter(streamPredicate)
                 .map(TransactionFilter::formatTransaction)
                 .collect(Collectors.joining())
                 .stripTrailing();
     }
+
     private static String formatTransaction(Transaction transaction) {
         return transaction.date()
                 + "\t" + transaction.symbol() + transaction.amount()
