@@ -16,10 +16,10 @@ public class TestTransactionFilter {
     @BeforeEach
     public void setup() {
         transactions = new ArrayList<>();
-        transactions.add(new Transaction(100, 100, TransactionType.DEPOSIT.symbol, date));
-        transactions.add(new Transaction(500, 600, TransactionType.DEPOSIT.symbol, date));
-        transactions.add(new Transaction(100, 500, TransactionType.WITHDRAWAL.symbol, datePlus100Days));
-        transactions.add(new Transaction(200, 300, TransactionType.WITHDRAWAL.symbol, datePlus200Days));
+        transactions.add(new Transaction(100, 100, TransactionType.DEPOSIT, date));
+        transactions.add(new Transaction(500, 600, TransactionType.DEPOSIT, date));
+        transactions.add(new Transaction(100, 500, TransactionType.WITHDRAWAL, datePlus100Days));
+        transactions.add(new Transaction(200, 300, TransactionType.WITHDRAWAL, datePlus200Days));
     }
 
     @Test
@@ -42,18 +42,14 @@ public class TestTransactionFilter {
 
     @Test
     public void testGetTransactionsByTypeDeposit() {
-        String expectedOutput =
-                  date + "\t+100\t100" + "\n"
-                + date + "\t+500\t600";
-        assertEquals(expectedOutput, TransactionFilter.getTransactionsByType(transactions, TransactionType.DEPOSIT));
+        List<Transaction> expectedOutput = transactions.subList(0, 2);
+        assertEquals(expectedOutput, TransactionType.getDepositTransactions(transactions));
     }
 
     @Test
     public void testGetTransactionsByTypeWithdrawal() {
-        String expectedOutput =
-                datePlus100Days + "\t-100\t500" + "\n"
-                + datePlus200Days + "\t-200\t300";
-        assertEquals(expectedOutput, TransactionFilter.getTransactionsByType(transactions, TransactionType.WITHDRAWAL));
+        List<Transaction> expectedOutput = transactions.subList(2, 4);
+        assertEquals(expectedOutput, TransactionType.getWithdrawalTransactions(transactions));
     }
 
     @Test
@@ -61,12 +57,12 @@ public class TestTransactionFilter {
         String expectedOutput =
                   date + "\t+100\t100" + "\n"
                 + date + "\t+500\t600";
-        assertEquals(expectedOutput, TransactionFilter.getTransactionsDate(transactions, date));
+        assertEquals(expectedOutput, TransactionFilter.getTransactionsByDate(transactions, date));
     }
 
     @Test
     public void testGetTransactionsByDateWithNoTransactions() {
         String expectedOutput = "";
-        assertEquals(expectedOutput, TransactionFilter.getTransactionsDate(transactions, date.plusDays(300)));
+        assertEquals(expectedOutput, TransactionFilter.getTransactionsByDate(transactions, date.plusDays(300)));
     }
 }

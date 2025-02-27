@@ -1,4 +1,4 @@
 import java.time.LocalDate;
 
-public record Transaction(int amount, int balance, String symbol, LocalDate date) {
+public record Transaction(int amount, int balance, TransactionType type, LocalDate date) {
 }

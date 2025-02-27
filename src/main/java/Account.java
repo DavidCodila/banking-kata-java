@@ -14,13 +14,13 @@ public class Account {
     public void deposit(int amount, LocalDate date) throws InvalidParameterException {
         ValidateTransaction.validateDeposit(amount);
         this.balance += amount;
-        transactions.add(new Transaction(amount, balance, TransactionType.DEPOSIT.symbol, date));
+        transactions.add(new Transaction(amount, balance, TransactionType.DEPOSIT, date));
     }
 
     public void withdraw(int amount, LocalDate date) throws RuntimeException {
         ValidateTransaction.validateWithdrawal(amount, balance);
         this.balance -= amount;
-        transactions.add(new Transaction(amount, balance, TransactionType.WITHDRAWAL.symbol, date));
+        transactions.add(new Transaction(amount, balance, TransactionType.WITHDRAWAL, date));
     }
 
     public String printStatement() {
@@ -32,7 +32,7 @@ public class Account {
     }
 
     public String getTransactionsByDate(LocalDate date) {
-        return Constants.statementHeader + TransactionFilter.getTransactionsDate(transactions, date);
+        return Constants.statementHeader + TransactionFilter.getTransactionsByDate(transactions, date);
     }
 
 }
