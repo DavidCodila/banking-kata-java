@@ -11,15 +11,18 @@ public class TestTransactionFilter {
     private static final LocalDate date = LocalDate.now();
     private static final LocalDate datePlus100Days = date.plusDays(100);
     private static final LocalDate datePlus200Days = date.plusDays(200);
-    private static List<Transaction> transactions;
+    private List<Transaction> transactions;
+    public TransactionFilter filter;
 
     @BeforeEach
     public void setup() {
         transactions = new ArrayList<>();
-        transactions.add(new Transaction(100, 100, TransactionType.DEPOSIT, date));
-        transactions.add(new Transaction(500, 600, TransactionType.DEPOSIT, date));
-        transactions.add(new Transaction(100, 500, TransactionType.WITHDRAWAL, datePlus100Days));
-        transactions.add(new Transaction(200, 300, TransactionType.WITHDRAWAL, datePlus200Days));
+        this.filter = new TransactionFilter();
+        this.transactions.add(new Transaction(100, 100, TransactionType.DEPOSIT, date));
+        this.transactions.add(new Transaction(500, 600, TransactionType.DEPOSIT, date));
+        this.transactions.add(new Transaction(100, 500, TransactionType.WITHDRAWAL, datePlus100Days));
+        this.transactions.add(new Transaction(200, 300, TransactionType.WITHDRAWAL, datePlus200Days));
+        this.filter.loadTransactions(this.transactions);
     }
 
     @Test
@@ -29,7 +32,7 @@ public class TestTransactionFilter {
                 + date + "\t+500\t600" + "\n"
                 + datePlus100Days + "\t-100\t500" + "\n"
                 + datePlus200Days + "\t-200\t300";
-        assertEquals(expectedOutput, TransactionFilter.getAllTransactions(transactions));
+        assertEquals(expectedOutput, this.filter.getAllTransactions());
     }
 
     @Test
@@ -37,18 +40,18 @@ public class TestTransactionFilter {
         String expectedOutput =
                   date + "\t+100\t100" + "\n"
                 + datePlus100Days + "\t-100\t500";
-        assertEquals(expectedOutput, TransactionFilter.getTransactionsByAmount(transactions,100));
+        assertEquals(expectedOutput, this.filter.getTransactionsByAmount(100));
     }
 
     @Test
     public void testGetTransactionsByTypeDeposit() {
-        List<Transaction> expectedOutput = transactions.subList(0, 2);
+        List<Transaction> expectedOutput = this.transactions.subList(0, 2);
         assertEquals(expectedOutput, TransactionType.getDepositTransactions(transactions));
     }
 
     @Test
     public void testGetTransactionsByTypeWithdrawal() {
-        List<Transaction> expectedOutput = transactions.subList(2, 4);
+        List<Transaction> expectedOutput = this.transactions.subList(2, 4);
         assertEquals(expectedOutput, TransactionType.getWithdrawalTransactions(transactions));
     }
 
@@ -57,12 +60,12 @@ public class TestTransactionFilter {
         String expectedOutput =
                   date + "\t+100\t100" + "\n"
                 + date + "\t+500\t600";
-        assertEquals(expectedOutput, TransactionFilter.getTransactionsByDate(transactions, date));
+        assertEquals(expectedOutput, this.filter.getTransactionsByDate(date));
     }
 
     @Test
     public void testGetTransactionsByDateWithNoTransactions() {
         String expectedOutput = "";
-        assertEquals(expectedOutput, TransactionFilter.getTransactionsByDate(transactions, date.plusDays(300)));
+        assertEquals(expectedOutput, this.filter.getTransactionsByDate(date.plusDays(300)));
     }
 }

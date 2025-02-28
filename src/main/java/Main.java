@@ -3,7 +3,7 @@ import java.time.LocalDate;
 public class Main {
     public static void main(String[] args) {
         LocalDate date = LocalDate.now();
-        Account account = new Account();
+        Account account = new Account(new TransactionFilter());
         account.deposit(1000, date);
         account.deposit(200, date);
         date = date.plusDays(100);

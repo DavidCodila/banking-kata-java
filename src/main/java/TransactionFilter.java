@@ -1,24 +1,35 @@
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class TransactionFilter {
 
-    public static String getAllTransactions(List<Transaction> transactions) {
-        return filteredTransactions(transactions, transaction -> true);
+    private List<Transaction> transactions = new ArrayList<>();
+    private Predicate<Transaction> streamPredicate;
+
+    public void loadTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
     }
 
-    public static String getTransactionsByAmount(List<Transaction> transactions, int amount) {
-        return filteredTransactions(transactions, transaction -> transaction.amount() == amount);
+    public String getAllTransactions() {
+        this.streamPredicate = transaction -> true;
+        return filteredTransactions();
     }
 
-    public static String getTransactionsByDate(List<Transaction> transactions, LocalDate date) {
-        return filteredTransactions(transactions, transaction -> transaction.date() == date);
+    public String getTransactionsByAmount(int amount) {
+        this.streamPredicate = transaction -> transaction.amount() == amount;
+        return filteredTransactions();
     }
 
-    private static String filteredTransactions(List<Transaction> transactions, Predicate<Transaction> streamPredicate) {
-        return transactions.stream()
+    public String getTransactionsByDate(LocalDate date) {
+        this.streamPredicate = transaction -> transaction.date() == date;
+        return filteredTransactions();
+    }
+
+    private String filteredTransactions() {
+        return this.transactions.stream()
                 .filter(streamPredicate)
                 .map(TransactionType::getFormattedTransaction)
                 .collect(Collectors.joining())
