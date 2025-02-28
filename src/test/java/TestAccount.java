@@ -13,7 +13,7 @@ public class TestAccount {
 
     @BeforeEach
     public void setup() {
-        this.account = new Account(new TransactionFilter());
+        this.account = new Account();
     }
 
     @Test
@@ -67,7 +67,7 @@ public class TestAccount {
         this.account.withdraw(1, date);
         String expectedOutput = Constants.statementHeader +
                 date + "\t+3\t13" + "\n" + date + "\t-3\t9";
-        assertEquals(expectedOutput, this.account.getTransactionsByAmount(amount));
+        assertEquals(expectedOutput, this.account.printStatementByAmount(amount));
     }
 
     @Test
@@ -80,7 +80,23 @@ public class TestAccount {
         this.account.withdraw(2, datePlus100Days);
         String expectedOutput = Constants.statementHeader +
                 datePlus100Days + "\t+200\t210" + "\n" + datePlus100Days + "\t-2\t107";
-        assertEquals(expectedOutput, this.account.getTransactionsByDate(datePlus100Days));
+        assertEquals(expectedOutput, this.account.printStatementByDate(datePlus100Days));
+    }
+
+    @Test
+    public void testGetWithdrawalTransactions() {
+        this.account.deposit(10, date);
+        this.account.withdraw(1, date);
+        String expectedOutput = Constants.statementHeader + date + "\t-1\t9";
+        assertEquals(expectedOutput, this.account.printWithdrawalTransactions());
+    }
+
+    @Test
+    public void testGetDepositTransactions() {
+        this.account.deposit(10, date);
+        this.account.withdraw(1, date);
+        String expectedOutput = Constants.statementHeader + date + "\t+10\t10";
+        assertEquals(expectedOutput, this.account.printDepositTransactions());
     }
 
     @Test
