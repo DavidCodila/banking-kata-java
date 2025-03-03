@@ -1,8 +1,13 @@
+package Account;
+
+import Constants.*;
+import Filter.*;
+import Transaction.*;
+
 import java.security.InvalidParameterException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Account {
@@ -14,9 +19,7 @@ public class Account {
     }
 
     public void deposit(int amount, LocalDate date) throws InvalidParameterException {
-        if (amount <= 0) {
-            throw new InvalidParameterException("Can not deposit less than 1");
-        }
+        validateAmount(amount);
         this.balance += amount;
         transactions.add(new Transaction(amount, this.balance, TransactionType.DEPOSIT, date));
     }
@@ -28,38 +31,30 @@ public class Account {
     }
 
     public String printStatement() {
-        return this.filteredTransactions(transaction -> true);
+        return printTransactions(this.transactions);
     }
 
-    public String printStatementByAmount(int amount) {
-        return this.filteredTransactions(transaction -> transaction.amount() == amount);
-    }
-
-    public String printStatementByDate(LocalDate date) {
-        return this.filteredTransactions(transaction -> transaction.date() == date);
-    }
-
-    public String printWithdrawalTransactions() {
-        return this.filteredTransactions(transaction -> transaction.type() == TransactionType.WITHDRAWAL);
-    }
-
-    public String printDepositTransactions() {
-        return this.filteredTransactions(transaction -> transaction.type() == TransactionType.DEPOSIT);
-    }
-
-    private String filteredTransactions(Predicate<Transaction> streamPredicate) {
+    private String printTransactions(List<Transaction> transactions) {
         return Constants.statementHeader +
-                this.transactions.stream()
-                        .filter(streamPredicate)
+                transactions.stream()
                         .map(transaction -> transaction.type().getFormattedTransaction(transaction))
                         .collect(Collectors.joining())
                         .stripTrailing();
     }
 
-    private void validateWithdrawal(int amount) {
+    public List<Transaction> filter(Filter filter) {
+        return this.transactions.stream()
+                .filter(filter::apply).collect(Collectors.toList());
+    }
+
+    private void validateAmount(int amount) {
         if (amount <= 0) {
-            throw new InvalidParameterException("Can not withdraw less than 1");
+            throw new InvalidParameterException("Amount not be less than 1");
         }
+    }
+
+    private void validateWithdrawal(int amount) {
+        this.validateAmount(amount);
         if (this.balance - amount < 0) {
             throw new RuntimeException("Invalid funds to make transaction");
         }

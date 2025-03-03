@@ -1,3 +1,10 @@
+import Account.Account;
+import Constants.Constants;
+import Filter.AmountFilter;
+import Filter.DateFilter;
+import Filter.TypeFilter;
+import Transaction.Transaction;
+import Transaction.TransactionType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -58,54 +65,12 @@ public class TestAccount {
     }
 
     @Test
-    public void testGetTransactionsByAmount() {
-        int amount = 3;
-        this.account.deposit(10, date);
-        this.account.deposit(amount, date);
-        this.account.withdraw(1, date);
-        this.account.withdraw(amount, date);
-        this.account.withdraw(1, date);
-        String expectedOutput = Constants.statementHeader +
-                date + "\t+3\t13" + "\n" + date + "\t-3\t9";
-        assertEquals(expectedOutput, this.account.printStatementByAmount(amount));
-    }
-
-    @Test
-    public void testGetTransactionsByDate() {
-        LocalDate datePlus100Days = date.plusDays(100);
-        this.account.deposit(10, date);
-        this.account.deposit(200, datePlus100Days);
-        this.account.withdraw(1, date);
-        this.account.withdraw(100, date);
-        this.account.withdraw(2, datePlus100Days);
-        String expectedOutput = Constants.statementHeader +
-                datePlus100Days + "\t+200\t210" + "\n" + datePlus100Days + "\t-2\t107";
-        assertEquals(expectedOutput, this.account.printStatementByDate(datePlus100Days));
-    }
-
-    @Test
-    public void testGetWithdrawalTransactions() {
-        this.account.deposit(10, date);
-        this.account.withdraw(1, date);
-        String expectedOutput = Constants.statementHeader + date + "\t-1\t9";
-        assertEquals(expectedOutput, this.account.printWithdrawalTransactions());
-    }
-
-    @Test
-    public void testGetDepositTransactions() {
-        this.account.deposit(10, date);
-        this.account.withdraw(1, date);
-        String expectedOutput = Constants.statementHeader + date + "\t+10\t10";
-        assertEquals(expectedOutput, this.account.printDepositTransactions());
-    }
-
-    @Test
     public void testWithdraw_0() {
         var exception = assertThrows(
                 InvalidParameterException.class,
                 () -> this.account.withdraw(0, date)
         );
-        assertEquals(exception.getMessage(), "Can not withdraw less than 1");
+        assertEquals("Amount not be less than 1", exception.getMessage());
     }
 
     @Test
@@ -114,7 +79,7 @@ public class TestAccount {
                 InvalidParameterException.class,
                 () -> this.account.withdraw(-1, date)
         );
-        assertEquals(exception.getMessage(), "Can not withdraw less than 1");
+        assertEquals("Amount not be less than 1", exception.getMessage());
     }
 
     @Test
@@ -124,7 +89,7 @@ public class TestAccount {
                 RuntimeException.class,
                 () -> this.account.withdraw(2, date)
         );
-        assertEquals(exception.getMessage(), "Invalid funds to make transaction");
+        assertEquals("Invalid funds to make transaction", exception.getMessage());
     }
 
     @Test
@@ -133,7 +98,7 @@ public class TestAccount {
                 InvalidParameterException.class,
                 () -> this.account.deposit(0, date)
         );
-        assertEquals(exception.getMessage(), "Can not deposit less than 1");
+        assertEquals("Amount not be less than 1", exception.getMessage());
     }
 
     @Test
@@ -142,6 +107,48 @@ public class TestAccount {
                 InvalidParameterException.class,
                 () -> this.account.deposit(-1, date)
         );
-        assertEquals(exception.getMessage(), "Can not deposit less than 1");
+        assertEquals("Amount not be less than 1", exception.getMessage());
     }
+
+    @Test
+    public void testFilterTransactionByAmount() {
+        this.account.deposit(100, date);
+        this.account.deposit(200, date);
+        AmountFilter amountFilter = new AmountFilter(100);
+        assertEquals(
+                new Transaction(100, 100, TransactionType.DEPOSIT, date),
+                this.account.filter(amountFilter).getFirst());
+    }
+
+    @Test
+    public void testFilterTransactionByDate() {
+        LocalDate datePlus100Days = date.plusDays(100);
+        this.account.deposit(100, date);
+        this.account.deposit(200, datePlus100Days);
+        DateFilter dateFilter = new DateFilter(datePlus100Days);
+        assertEquals(
+                new Transaction(200, 300, TransactionType.DEPOSIT, datePlus100Days),
+                this.account.filter(dateFilter).getFirst());
+    }
+
+    @Test
+    public void testFilterTransactionByWithdrawalType() {
+        this.account.deposit(300, date);
+        this.account.withdraw(200, date);
+        TypeFilter typeFilter = new TypeFilter(TransactionType.WITHDRAWAL);
+        assertEquals(
+                new Transaction(200, 100, TransactionType.WITHDRAWAL, date),
+                this.account.filter(typeFilter).getFirst());
+    }
+
+    @Test
+    public void testFilterTransactionByDepositType() {
+        this.account.deposit(300, date);
+        this.account.withdraw(200, date);
+        TypeFilter typeFilter = new TypeFilter(TransactionType.DEPOSIT);
+        assertEquals(
+                new Transaction(300, 300, TransactionType.DEPOSIT, date),
+                this.account.filter(typeFilter).getFirst());
+    }
+
 }
