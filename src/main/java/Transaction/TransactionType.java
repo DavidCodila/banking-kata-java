@@ -11,8 +11,6 @@ public enum TransactionType {
     }
 
     public String getFormattedTransaction(Transaction transaction) {
-        return transaction.date()
-                + "\t" + this.symbol + transaction.amount()
-                + "\t" + transaction.balance() + "\n";
+        return transaction.date() + "\t" + this.symbol + transaction.amount() + "\n";
     }
 }

@@ -21,25 +21,26 @@ public class Account {
     public void deposit(int amount, LocalDate date) throws InvalidParameterException {
         validateAmount(amount);
         this.balance += amount;
-        transactions.add(new Transaction(amount, this.balance, TransactionType.DEPOSIT, date));
+        transactions.add(new Transaction( new Amount(TransactionType.DEPOSIT, amount), date));
     }
 
     public void withdraw(int amount, LocalDate date) throws RuntimeException {
         this.validateWithdrawal(amount);
         this.balance -= amount;
-        this.transactions.add(new Transaction(amount, this.balance, TransactionType.WITHDRAWAL, date));
+        this.transactions.add(new Transaction(new Amount(TransactionType.WITHDRAWAL, amount), date));
     }
 
     public String printStatement() {
-        return printTransactions(this.transactions);
+        return printTransactions();
     }
 
-    private String printTransactions(List<Transaction> transactions) {
-        return Constants.statementHeader +
-                transactions.stream()
-                        .map(transaction -> transaction.type().getFormattedTransaction(transaction))
-                        .collect(Collectors.joining())
-                        .stripTrailing();
+    private String printTransactions() {
+        return "";
+//        return Constants.statementHeader +
+//                this.transactions.stream()
+//                        .map(transaction -> transaction.type().getFormattedTransaction(transaction))
+//                        .collect(Collectors.joining())
+//                        .stripTrailing();
     }
 
     public List<Transaction> filter(Filter filter) {

@@ -12,7 +12,7 @@ public class AmountFilter implements Filter {
 
     @Override
     public boolean apply(Transaction transaction) {
-        return this.amount == transaction.amount();
+        return this.amount == transaction.amount().amount();
 
     }
 }

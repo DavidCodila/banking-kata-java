@@ -12,6 +12,6 @@ public class TypeFilter implements Filter {
 
     @Override
     public boolean apply(Transaction transaction) {
-        return this.type == transaction.type();
+        return this.type == transaction.amount().type();
     }
 }

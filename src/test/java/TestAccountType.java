@@ -10,15 +10,15 @@ public class TestAccountType {
 
     @Test
     public void testGetFormattedDepositTransaction() {
-        Transaction transaction = new Transaction(100, 100, TransactionType.DEPOSIT, date);
+        Transaction transaction = new Transaction(new Amount(TransactionType.DEPOSIT, 100), date);
         String expectedOutput = date + "\t+100\t100" + "\n";
-        assertEquals(expectedOutput, transaction.type().getFormattedTransaction(transaction));
+        assertEquals(expectedOutput, transaction.amount().type().getFormattedTransaction(transaction));
     }
 
     @Test
     public void testGetFormattedWithdrawTransaction() {
-        Transaction transaction = new Transaction(100, 100, TransactionType.WITHDRAWAL, date);
+        Transaction transaction = new Transaction(new Amount(TransactionType.WITHDRAWAL, 100), date);
         String expectedOutput = date + "\t-100\t100" + "\n";
-        assertEquals(expectedOutput, transaction.type().getFormattedTransaction(transaction));
+        assertEquals(expectedOutput, transaction.amount().type().getFormattedTransaction(transaction));
     }
 }

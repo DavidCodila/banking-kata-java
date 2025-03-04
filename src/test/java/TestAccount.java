@@ -3,8 +3,7 @@ import Constants.Constants;
 import Filter.AmountFilter;
 import Filter.DateFilter;
 import Filter.TypeFilter;
-import Transaction.Transaction;
-import Transaction.TransactionType;
+import Transaction.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -116,7 +115,7 @@ public class TestAccount {
         this.account.deposit(200, date);
         AmountFilter amountFilter = new AmountFilter(100);
         assertEquals(
-                new Transaction(100, 100, TransactionType.DEPOSIT, date),
+                new Transaction(new Amount(TransactionType.DEPOSIT, 100), date),
                 this.account.filter(amountFilter).getFirst());
     }
 
@@ -127,7 +126,7 @@ public class TestAccount {
         this.account.deposit(200, datePlus100Days);
         DateFilter dateFilter = new DateFilter(datePlus100Days);
         assertEquals(
-                new Transaction(200, 300, TransactionType.DEPOSIT, datePlus100Days),
+                new Transaction(new Amount(TransactionType.DEPOSIT, 200), datePlus100Days),
                 this.account.filter(dateFilter).getFirst());
     }
 
@@ -137,7 +136,7 @@ public class TestAccount {
         this.account.withdraw(200, date);
         TypeFilter typeFilter = new TypeFilter(TransactionType.WITHDRAWAL);
         assertEquals(
-                new Transaction(200, 100, TransactionType.WITHDRAWAL, date),
+                new Transaction(new Amount(TransactionType.WITHDRAWAL, 200), date),
                 this.account.filter(typeFilter).getFirst());
     }
 
@@ -147,7 +146,7 @@ public class TestAccount {
         this.account.withdraw(200, date);
         TypeFilter typeFilter = new TypeFilter(TransactionType.DEPOSIT);
         assertEquals(
-                new Transaction(300, 300, TransactionType.DEPOSIT, date),
+                new Transaction(new Amount(TransactionType.DEPOSIT, 300), date),
                 this.account.filter(typeFilter).getFirst());
     }
 
