@@ -1,6 +1,6 @@
-package Filter;
+package au.com.auspost.filter;
 
-import Transaction.Transaction;
+import au.com.auspost.transaction.Transaction;
 
 import java.time.LocalDate;
 

@@ -1,6 +1,7 @@
-package Filter;
+package au.com.auspost.filter;
 
-import Transaction.*;
+import au.com.auspost.transaction.Transaction;
+import au.com.auspost.transaction.TransactionType;
 
 
 public class TypeFilter implements Filter {
@@ -12,6 +13,6 @@ public class TypeFilter implements Filter {
 
     @Override
     public boolean apply(Transaction transaction) {
-        return this.type == transaction.amount().type();
+        return this.type == transaction.type();
     }
 }

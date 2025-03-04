@@ -1,6 +1,6 @@
-package Filter;
+package au.com.auspost.filter;
 
-import Transaction.Transaction;
+import au.com.auspost.transaction.Transaction;
 
 public class AmountFilter implements Filter {
     private final int amount;
@@ -12,7 +12,7 @@ public class AmountFilter implements Filter {
 
     @Override
     public boolean apply(Transaction transaction) {
-        return this.amount == transaction.amount().amount();
+        return this.amount == transaction.amount();
 
     }
 }

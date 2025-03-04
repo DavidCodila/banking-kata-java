@@ -1,14 +1,15 @@
-package Account;
+package au.com.auspost.account;
 
-import Constants.*;
-import Filter.*;
-import Transaction.*;
+import au.com.auspost.filter.Filter;
+import au.com.auspost.transaction.Transaction;
+import au.com.auspost.transaction.TransactionType;
 
 import java.security.InvalidParameterException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
 
 public class Account {
     private int balance = 0;
@@ -21,31 +22,36 @@ public class Account {
     public void deposit(int amount, LocalDate date) throws InvalidParameterException {
         validateAmount(amount);
         this.balance += amount;
-        transactions.add(new Transaction( new Amount(TransactionType.DEPOSIT, amount), date));
+        transactions.add(new Transaction(TransactionType.DEPOSIT, amount, date));
     }
 
     public void withdraw(int amount, LocalDate date) throws RuntimeException {
         this.validateWithdrawal(amount);
         this.balance -= amount;
-        this.transactions.add(new Transaction(new Amount(TransactionType.WITHDRAWAL, amount), date));
+        this.transactions.add(new Transaction(TransactionType.WITHDRAWAL, amount, date));
     }
+
 
     public String printStatement() {
-        return printTransactions();
-    }
-
-    private String printTransactions() {
-        return "";
-//        return Constants.statementHeader +
-//                this.transactions.stream()
-//                        .map(transaction -> transaction.type().getFormattedTransaction(transaction))
-//                        .collect(Collectors.joining())
-//                        .stripTrailing();
+        int balance = 0;
+        StringBuilder stringBuilder = new StringBuilder();
+        for(Transaction transaction: this.transactions) {
+            balance = this.calculateNewBalance(transaction, balance);
+            stringBuilder.append(transaction.print(balance));
+        }
+        return stringBuilder.toString().stripTrailing();
     }
 
     public List<Transaction> filter(Filter filter) {
         return this.transactions.stream()
                 .filter(filter::apply).collect(Collectors.toList());
+    }
+
+    private int calculateNewBalance(Transaction transaction, int oldBalance) {
+        return switch (transaction.type()) {
+            case TransactionType.DEPOSIT -> oldBalance + transaction.amount();
+            case TransactionType.WITHDRAWAL -> oldBalance - transaction.amount();
+        };
     }
 
     private void validateAmount(int amount) {
