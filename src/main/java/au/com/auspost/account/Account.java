@@ -1,5 +1,6 @@
 package au.com.auspost.account;
 
+import au.com.auspost.constants.Constants;
 import au.com.auspost.filter.Filter;
 import au.com.auspost.transaction.Transaction;
 import au.com.auspost.transaction.TransactionType;
@@ -31,20 +32,19 @@ public class Account {
         this.transactions.add(new Transaction(TransactionType.WITHDRAWAL, amount, date));
     }
 
-
-    public String printStatement() {
-        int balance = 0;
-        StringBuilder stringBuilder = new StringBuilder();
-        for(Transaction transaction: this.transactions) {
-            balance = this.calculateNewBalance(transaction, balance);
-            stringBuilder.append(transaction.print(balance));
-        }
-        return stringBuilder.toString().stripTrailing();
-    }
-
     public List<Transaction> filter(Filter filter) {
         return this.transactions.stream()
                 .filter(filter::apply).collect(Collectors.toList());
+    }
+
+    public String printStatement() {
+        int balance = 0;
+        StringBuilder stringBuilder = new StringBuilder().append(Constants.statementHeader);
+        for(Transaction transaction: this.transactions) {
+            balance = this.calculateNewBalance(transaction, balance);
+            stringBuilder.append(transaction.print(balance)).append("\n");
+        }
+        return stringBuilder.toString().stripTrailing();
     }
 
     private int calculateNewBalance(Transaction transaction, int oldBalance) {

@@ -1,5 +1,6 @@
 package au.com.auspost.account;
 
+import au.com.auspost.constants.Constants;
 import au.com.auspost.filter.AmountFilter;
 import au.com.auspost.filter.DateFilter;
 import au.com.auspost.filter.TypeFilter;
@@ -136,6 +137,17 @@ public class AccountTest {
         assertEquals(
                 new Transaction(TransactionType.DEPOSIT, 300, date),
                 this.account.filter(typeFilter).getFirst());
+    }
+
+    @Test
+    public void testPrintStatement() {
+        this.account.deposit(300, date);
+        this.account.withdraw(200, date);
+        String expectedOutput =
+                Constants.statementHeader
+                + date + "\t+300\t300\n"
+                + date + "\t-200\t100";
+        assertEquals(expectedOutput, this.account.printStatement());
     }
 
 }
