@@ -51,18 +51,6 @@ public class AccountTest {
         assertEquals(100, this.account.getBalance());
     }
 
-//    @Test
-//    public void testPrintStatement() {
-//        this.account.deposit(1, date);
-//        this.account.deposit(2, date);
-//        this.account.withdraw(3, date);
-//        List<PrintableTransaction> expectedOutput = new ArrayList<>();
-//        expectedOutput.add(new PrintableTransaction(date, new Amount(TransactionType.DEPOSIT, 1), 1));
-//        expectedOutput.add(new PrintableTransaction(date, new Amount(TransactionType.DEPOSIT, 2), 3));
-//        expectedOutput.add(new PrintableTransaction(date, new Amount(TransactionType.WITHDRAWAL, 3), 0));
-//        assertEquals(expectedOutput, this.account.getPrintableTransactions());
-//    }
-
     @Test
     public void testWithdraw_0() {
         var exception = assertThrows(
